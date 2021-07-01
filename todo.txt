@@ -1,0 +1,12 @@
+// This function gets the input of words in a <textarea id="data">
+// and puts them into an array, splitting by newline
+
+$(function () {
+    var lines = [];
+    $.each($('#data').val().split(/\n/), function (i, line) {
+        if (line) {
+            lines.push(line);
+        }
+    });
+    console.log(lines);
+});
