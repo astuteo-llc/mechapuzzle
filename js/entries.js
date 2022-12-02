@@ -3,8 +3,34 @@ var entries_render_to = 'entries_js';
 function render_entries()
 {
     document.getElementById(entries_render_to).innerHTML = '';
+    entry_initial_letters();
     entry_metadata();
     entry_lengths();
+}
+
+function isLetter(str) {
+    return str.length === 1 && str.match(/[a-z]/i);
+}
+
+function entry_initial_letters() {
+    var puzdata = PUZAPP.puzdata;
+    var letters = [];
+    var entry_lists = [puzdata.across_entries, puzdata.down_entries];
+    for (var j = 0; j < entry_lists.length; j++) {
+        var entries = entry_lists[j];
+        for (var key in entries) {
+            if (!entries.hasOwnProperty(key))
+                continue;
+            // Find the first letter of the clue
+            for (var i = 0; i < entries[key].length; i++) {
+                if (isLetter(entries[key].charAt(i))) {
+                    letters.push(entries[key].charAt(i).toUpperCase());
+                    break;
+                }
+            }
+        }
+    }
+    document.getElementById(entries_render_to).innerHTML += 'First letters of entries:<br />' + letters.join(' ') + '<br /><br />';
 }
 
 function entry_metadata()
