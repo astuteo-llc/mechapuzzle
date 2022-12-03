@@ -19,8 +19,6 @@ function entry_initial_letters() {
     for (var j = 0; j < entry_lists.length; j++) {
         var entries = entry_lists[j];
         for (var key in entries) {
-            if (!entries.hasOwnProperty(key))
-                continue;
             // Find the first letter of the clue
             for (var i = 0; i < entries[key].length; i++) {
                 if (isLetter(entries[key].charAt(i))) {
@@ -30,7 +28,9 @@ function entry_initial_letters() {
             }
         }
     }
-    document.getElementById(entries_render_to).innerHTML += 'First letters of entries:<br />' + letters.join(' ') + '<br /><br />';
+    var container = document.getElementById(entries_render_to);
+    var text = 'First letters of entries:<br />' + letters.join(' ') + '<br /><br />';
+    container.innerHTML = text;
 }
 
 function entry_metadata()
