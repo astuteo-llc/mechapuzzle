@@ -2,48 +2,49 @@ var extension_render_to = 'extension_js';
 
 function render_extension() {
   document.getElementById(extension_render_to).innerHTML = '';
-
+  acronym_finder();
+  very_similar_words();
 }
-
-// function clue_common_strings() {
-//     var puzdata = PUZAPP.puzdata;
-//     var letters = [];
-//     var clue_lists = [puzdata.across_clues, puzdata.down_clues];
-// }
 
 // ---------------------------
 //  BUILD ACRONYMS FROM CLUES
 // ---------------------------
 
-function acronym(sentence) {
-  // Split the sentence into an array of words
-  const words = sentence.split(" ");
-  // Create an empty array to store the acronym
+// HELPER FUNCTION TO GET FIRST LETTER OF CLUE
+function acronym(clueText) {
+  const words = clueText.split(" ");
   const acronym = [];
-  // Loop through the words and get the first letter of each word
   for (const word of words) {
     acronym.push(word[0]);
   }
-  // Join the letters in the acronym array and return the result
   return acronym.join("");
 }
-
-const acronymExplorerHeading = document.createElement('h3');
-const acronymExplorerText = document.createTextNode('Acronym Explorer:');
-acronymExplorerHeading.appendChild(acronymExplorerText);
-document.getElementById(extension_render_to).appendChild(acronymExplorerHeading);
-
-var acronym_result = [];
-var acronym_result = acronym("Significant Eastern City of North Dakota");
-document.getElementById(extension_render_to).innerHTML += 'Full Entry Clue Here: ' + acronym_result.toUpperCase();
-
+ 
+function acronym_finder() {  
+    var html = '';
+    html += '<h3>Acronym Finder</h3>';
+    
+    var puzdata = PUZAPP.puzdata;
+    var acronym_clue_lists = [puzdata.across_clues, puzdata.down_clues];
+    for (var j = 0; j < acronym_clue_lists.length; j++) {
+      var acronym_clues = acronym_clue_lists[j];
+      for (var key in acronym_clues) {
+        if (!acronym_clues.hasOwnProperty(key))
+            continue;
+        const acronym_result = acronym(acronym_clues[key]);
+        html += '<p><strong>' + acronym_result.toUpperCase() + '</strong> – '+ acronym_clues[key] + '</p>';
+      }
+    }
+    document.getElementById('extension0').innerHTML = html;
+    return false;
+}
 
 // -----------------------------
 //  FIND SIMILAR PAIRS OF WORDS
 // -----------------------------
 
+// Helper function to find pairs with a single letter difference
 function singleLetterPairs(words) {
-  // Create an empty array to store the pairs
   const pairs = [];
   // Loop through the words and compare each word to every other word
   for (let i = 0; i < words.length; i++) {
@@ -69,28 +70,25 @@ function diff(a, b) {
   return diff;
 }
 
-// Example usage
-const words = ["tour", "force", "nom", "plume", "sour", "forte", "non", "plumb"];
-const pairs = singleLetterPairs(words);
-var pair_matches = [];
-for (const [word1, word2] of pairs) {
-  pair_matches.push(`${word1.toUpperCase()} ${word2.toUpperCase()}`);
-}
-const verySimilarHeading = document.createElement('h3');
-const verySimilarText = document.createTextNode('Very Similar Words:');
-verySimilarHeading.appendChild(verySimilarText);
-document.getElementById(extension_render_to).appendChild(verySimilarHeading);
+function very_similar_words() {  
 
-if (pair_matches.length === 0) {
-  const p = document.createElement('p');
-  const text = document.createTextNode('No very similar words found');
-  p.appendChild(text);
-  document.getElementById(extension_render_to).appendChild(p);
-} else {
-  for (const pair of pair_matches) {
-    const p = document.createElement('p');
-    const text = document.createTextNode(pair);
-    p.appendChild(text);
-    document.getElementById(extension_render_to).appendChild(p);
+  var html = '';
+  html += '<br><h3>Very Similar Words</h3>';
+
+  const words = ["tour", "force", "nom", "plume", "sour", "forte", "non", "plumb"];
+  const pairs = singleLetterPairs(words);
+  var pair_matches = [];
+  for (const [word1, word2] of pairs) {
+    pair_matches.push(`${word1.toUpperCase()} ${word2.toUpperCase()}`);
   }
+
+  if (pair_matches.length === 0) {
+    html += '<p>No very similar words found</p>';
+  } else {
+    for (const pair of pair_matches) {
+      html += '<p>' + pair + '</p>';
+    }
+  }
+  document.getElementById('extension1').innerHTML = html;
+  return false;
 }

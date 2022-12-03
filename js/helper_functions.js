@@ -4,6 +4,8 @@ function render_all() {
     render_theme();
     render_clues();
     render_entries();
+    render_extension();
+    render_sandbox();
 
     // This is just to show the raw data for development purposes
     document.getElementById('rawdata_js').innerHTML = JSON.stringify(PUZAPP.puzdata, null, ' ');
